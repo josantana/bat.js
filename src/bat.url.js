@@ -5,13 +5,17 @@
  *   @homepage  batjs.github.io
  *
  *   @status    beta
- *   @version   0.0.1
+ *   @version   0.0.2
  *   @author    Jo Santana
  *   @license   Released under the MIT license
  *
  *   @usage:
  *
- *      Bat.url.tld(true);
+ *      Bat.url.address();
+ *      Bat.url.path();
+ *      Bat.url.subdomain();
+ *      Bat.url.domain();
+ *      Bat.url.tld();
  *      Bat.url.param('heroId');
  *
  *   @test: Use http://www.jsontest.com for testing purposes.
@@ -33,26 +37,96 @@
 
     Bat.url = (function ()
     {
-        var _data = window.location,
-            _path = _data.pathname;
+        var data = window.location;
      
         return {
 
             /*
-             *   Return the TLD domain
-             *
-             *   @attribute ignoreSubdomain (TRUE if not using "www" or something like it)
-             *   @type boolean
+             *   Return the entire address
              */
-     
-            tld: function (ignoreSubdomain)
+
+            address: function ()
             {
-                var response = _data.hostname.split('.');
-                if (!ignoreSubdomain) { response.shift(); }
-                response.shift();
-                response = response.join('.');
+                return data.href;
+            },
+
+            /*
+             *   Return the path (everything after the domain)
+             */
+
+            path: function ()
+            {
+                return data.pathname;
+            },
+
+            /*
+             *   Return the subdomain
+             */
+
+            subdomain: function ()
+            {
+                var response = data.hostname.split('.');
+
+                if (response.length > 2)
+                {
+                    response = response[0];
+                }
+                    else
+                {
+                    response = null;
+                }
              
                 return response;
+            },
+
+            /*
+             *   Return the domain
+             */
+
+            domain: function ()
+            {
+                var response = data.hostname.split('.');
+
+                switch (response.length)
+                {
+                    case 1:
+                        response = data.hostname; // localhost (?)
+                        break;
+
+                    case 2:
+                        response = response[0]; // domain.com
+                        break;
+
+                    case 3:
+                        response = response[1]; // www.domain.com
+                        break;
+
+                    default:
+                        response = response[1]; // www.domain.com.br
+                        break;
+                }
+             
+                return response;
+            },
+
+            /*
+             *   Return the TLD domain
+             */
+
+            tld: function ()
+            {
+                var response = data.hostname;
+
+                if (response.match(new RegExp(/\.[a-z]{2,3}\.[a-z]{2}$/i)))
+                {
+                    return response.match(new RegExp(/\.[a-z]{2,3}\.[a-z]{2}$/i))[0].replace(new RegExp(/^\./i), '');
+                }
+                    else if (response.match(new RegExp(/\.[a-z]{2,4}$/i)))
+                {
+                    return response.match(new RegExp(/\.[a-z]{2,4}$/i))[0].replace(new RegExp(/^\./i), '');
+                }
+             
+                return null;
             },
 
             /*
@@ -64,7 +138,7 @@
 
             param: function (name)
             {
-                var i, params = _data.search.substring(1).split('&');
+                var i, params = data.search.substring(1).split('&');
              
                 for (i = 0; i < params.length; i++)
                 {
