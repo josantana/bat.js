@@ -16,22 +16,22 @@
  *      Bat.cookie.delete('batman'); // Goodbye, Bruce.
  */
 
-(function()
-{
+ (function()
+ {
     'use strict';
 
     // Declare root variable - window in the browser, global on the server
     // Get already define BAT object (if available) or create a new object
 
     var root = this,
-        Bat  = root.Bat || {};
+    Bat  = root.Bat || {};
 
     /*
      *   BAT cookie
      */
 
-    Bat.cookie = (function ()
-    {     
+     Bat.cookie = (function ()
+     {
         return {
 
             /*
@@ -46,22 +46,22 @@
              *   @attribute days
              *   @type int
              */
-     
-            set: function (name, value, days)
-            {
+
+             set: function (name, value, days)
+             {
                 var expires;
-             
+
                 if (days)
                 {
                     var date = new Date();
                     date.setTime(date.getTime()+(days*24*60*60*1000));
                     expires = '; expires=' + date.toUTCString();
                 }
-                    else
+                else
                 {
                     expires = '';
                 }
-             
+
                 document.cookie  = name + '=' + value + expires + '; path=/';
             },
 
@@ -72,26 +72,26 @@
              *   @type string
              */
 
-            get: function (name)
-            {
+             get: function (name)
+             {
                 var i, nameEQ = name + "=",
-                    cookies = document.cookie.split(';');
-             
+                cookies = document.cookie.split(';');
+
                 for (i = 0; i < cookies.length; i++)
                 {
                     var cookie = cookies[i];
-             
+
                     while (cookie.charAt(0) === ' ')
                     {
                         cookie = cookie.substring(1, cookie.length);
                     }
-             
+
                     if (cookie.indexOf(nameEQ) === 0)
                     {
                         return cookie.substring(nameEQ.length, cookie.length);
                     }
                 }
-             
+
                 return null;
             },
 
@@ -102,8 +102,8 @@
              *   @type string
              */
 
-            delete: function (name)
-            {
+             delete: function (name)
+             {
                 this.set(name, '', -1);
             }
 

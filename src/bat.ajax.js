@@ -20,7 +20,7 @@
  *          request.setRequestHeader('key', 'value');
  *        }
  *      }, function (response) { console.log(response); });
- */
+*/
 
 (function()
 {
@@ -30,14 +30,14 @@
     // Get already define BAT object (if available) or create a new object
 
     var root = this,
-        Bat  = root.Bat || {};
+    Bat  = root.Bat || {};
 
     /*
      *   BAT ajax
      */
 
-    Bat.ajax = (function ()
-    {
+     Bat.ajax = (function ()
+     {
         var xhr = function ()
         {
             var instance = new XMLHttpRequest();
@@ -97,8 +97,8 @@
              *   @type function
              */
 
-            getJSON: function (options, callback)
-            {
+             getJSON: function (options, callback)
+             {
                 extendOptions (options, callback);
                 sendData (options, callback);
             },
@@ -107,8 +107,8 @@
              *   Function to get a JSONP response from ajax call
              */
 
-            getJSONP: function (options, callback)
-            {
+             getJSONP: function (options, callback)
+             {
                 extendOptions (options, callback);
                 insertScript (options, callback);
                 sendData (options, callback);
