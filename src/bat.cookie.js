@@ -57,12 +57,14 @@
                     date.setTime(date.getTime()+(days*24*60*60*1000));
                     expires = '; expires=' + date.toUTCString();
                 }
-                else
+                    else
                 {
                     expires = '';
                 }
 
                 document.cookie  = name + '=' + value + expires + '; path=/';
+
+                if (days !== -1) { Bat.log.info('Cookie: ' + name + ' [CREATED]'); }
             },
 
             /*
@@ -105,6 +107,8 @@
              delete: function (name)
              {
                 this.set(name, '', -1);
+
+                Bat.log.info('Cookie: ' + name + ' [DELETED]');
             }
 
         };

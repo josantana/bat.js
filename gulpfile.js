@@ -4,7 +4,15 @@ var uglify  = require('gulp-uglify');
 var header  = require('gulp-header');
 var notify  = require("gulp-notify");
 
-var js = [ 'src/bat.*.js' ];
+var js =
+[
+  'src/bat.cookie.js',
+  'src/bat.log.js',
+  'src/bat.ajax.js',
+  'src/bat.md5.js',
+  'src/bat.timer.js',
+  'src/bat.url.js'
+];
 
 var pkg = require('./package.json');
 var jsInfo =
