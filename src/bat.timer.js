@@ -36,7 +36,7 @@
         var instance, // Hold an instance of this class
             tack;     // Timer tick event
 
-            return {
+        return {
 
             /*
              *   Start a new timer

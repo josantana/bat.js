@@ -11,6 +11,7 @@ var js =
   'src/bat.ajax.js',
   'src/bat.md5.js',
   'src/bat.timer.js',
+  'src/bat.scroll.js',
   'src/bat.url.js'
 ];
 
