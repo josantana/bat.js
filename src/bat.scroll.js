@@ -12,6 +12,7 @@
  *
  *   @usage:
  *
+ *      Bat.scroll.window(element); // Sets an element as the window
  *      Bat.scroll.to('topicID');
  *      Bat.scroll.top();
  *      Bat.scroll.update('allAnchorElements');
@@ -36,6 +37,7 @@
      {
         var interval = 30,
             timeout = null, //timeout local variable
+            target = window,
 
         stop = function ()
         {
@@ -59,16 +61,29 @@
 
         getPageScroll = function()  // helper function
         {
-            var top = window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop;
+            var top;
+
+            if (target !== window) {
+                top = target.scrollTop;
+            } else {
+                top = window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop;
+            }
+
             return top;
         },
 
         getPageHeight = function()  // helper function
         {
             var body = document.body,
-            html = document.documentElement;
+                html = document.documentElement,
+                height;
 
-            var height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+            if (target !== window) {
+                height = target.scrollHeight;
+            } else {
+                height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+            }
+
             return height;
         },
 
@@ -93,8 +108,14 @@
             // If element offset top is not greater than the window height,
             // we should set it to stop above it
 
-            if ((pageBottom - elementTop) < window.innerHeight) {
-                elementTop = pageBottom - window.innerHeight;
+            if (target !== window) {
+                if ((pageBottom - elementTop) < target.clientHeight) {
+                    elementTop = pageBottom - target.clientHeight;
+                }
+            } else {
+                if ((pageBottom - elementTop) < window.innerHeight) {
+                    elementTop = pageBottom - window.innerHeight;
+                }
             }
 
             elementRealTop = (ID) ? getRealTop(document.getElementById(ID).parentNode) : 0;
@@ -122,7 +143,16 @@
                     interval = 0; // decrease the timeout timer value but not below 0
                 }
 
-                window.scrollBy(0, step);
+                if (target !== window) {
+                    if (dir) {
+                        target.scrollTop += step;
+                    } else {
+                        target.scrollTop -= step;
+                    }
+                } else {
+                    window.scrollBy(0, step);
+                }
+
                 timeout = window.setTimeout(function ()
                 {
                     animate(ID);
@@ -159,7 +189,9 @@
                 if (document.getElementById(elements[i].dataset.scroll) === null) {
                     topPos.push(0);
                 } else {
-                    topPos.push(getRealTop(document.getElementById(elements[i].dataset.scroll)));
+                    // Added realTop subtraction to fix target window position
+                    var targetDiff = (target !== window) ? getRealTop(target) : 0;
+                    topPos.push(getRealTop(document.getElementById(elements[i].dataset.scroll)) - targetDiff);
                 }
             }
 
@@ -198,7 +230,7 @@
 
             // Add a scroll function
 
-            window.addEventListener('scroll', updateScrollElement);
+            target.addEventListener('scroll', updateScrollElement);
 
             // Update at Start
 
@@ -210,6 +242,15 @@
         };
 
         return {
+
+            /*
+             *   Set scroll target window
+             */
+
+             window: function (element)
+             {
+                target = element;
+            },
 
             /*
              *   Scroll to reference (id element) top position
@@ -226,7 +267,7 @@
 
              top: function ()
              {
-                return animate();
+                return animate(null);
             },
 
             /*
