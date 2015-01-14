@@ -16,6 +16,7 @@
  *      Bat.scroll.to('topicID');
  *      Bat.scroll.top();
  *      Bat.scroll.update('allAnchorElements');
+ *      Bat.scroll.below(element);
  *
  */
 
@@ -59,7 +60,7 @@
             return top;
         },
 
-        getPageScroll = function()  // helper function
+        getPageScrollTop = function()  // helper function
         {
             var top;
 
@@ -67,6 +68,19 @@
                 top = target.scrollTop;
             } else {
                 top = window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop;
+            }
+
+            return top;
+        },
+
+        getPageScrollBottom = function()  // helper function
+        {
+            var top;
+
+            if (target !== window) {
+                top = target.scrollTop + target.clientHeight;
+            } else {
+                top = (window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop) + window.innerHeight;
             }
 
             return top;
@@ -87,7 +101,7 @@
             return height;
         },
 
-        animate = function (ID) // Main function
+        animateFunction = function (ID) // Main function
         {
             stop(); // for click on another button or link
 
@@ -100,7 +114,7 @@
                 dir, // Direction
                 step; // Step value
 
-            pageTop = getPageScroll();
+            pageTop = getPageScrollTop();
             pageBottom = getPageHeight();
 
             elementTop = (ID) ? document.getElementById(ID).offsetTop : 0;
@@ -155,7 +169,7 @@
 
                 timeout = window.setTimeout(function ()
                 {
-                    animate(ID);
+                    animateFunction(ID);
                 }, interval);
             }
 
@@ -165,7 +179,7 @@
             }
         },
 
-        highlight = function (elements, selector) {
+        updateFunction = function (elements, selector) {
 
             var i,
                 ids = [],
@@ -210,7 +224,7 @@
 
                 for (i=0; i < topPos.length; i++) {
                     // Update element
-                    if (getPageScroll() >= topPos[i] && getPageScroll() < topPos[i+1]) {
+                    if (getPageScrollTop() >= topPos[i] && getPageScrollTop() < topPos[i+1]) {
 
                         // Only once on change, do THIS
                         if (currentItem !== ids[i]) {
@@ -239,6 +253,39 @@
             } else {
                 window.addEventListener('load', updateScrollElement);
             }
+        },
+
+        belowFunction = function (element) {
+
+            var elPosBottom = 0;
+
+            // Get element top position
+            // Added realTop subtraction to fix target window position
+            var targetDiff = (target !== window) ? getRealTop(target) : 0;
+            elPosBottom = (getRealTop(element) + element.clientHeight) - targetDiff;
+
+            function alertScrollPassing () {
+                // Update element
+                if (getPageScrollBottom() >= elPosBottom) {
+                    // Dispatch event with the ID of this scroll Position
+                    var event = new CustomEvent('scrollPassing', { 'detail': { 'element': element }});
+                    window.dispatchEvent(event);
+                    // Remove this event handler
+                    target.removeEventListener('scroll', alertScrollPassing);
+                }
+            }
+
+            // Add a scroll function
+
+            target.addEventListener('scroll', alertScrollPassing);
+
+            // Update at Start
+
+            if (document.body.hasAttributes('unresolved')) {
+                document.addEventListener('polymer-ready', alertScrollPassing);
+            } else {
+                window.addEventListener('load', alertScrollPassing);
+            }
         };
 
         return {
@@ -258,7 +305,7 @@
 
              to: function (ID)
              {
-                return animate(ID);
+                return animateFunction(ID);
             },
 
             /*
@@ -267,7 +314,7 @@
 
              top: function ()
              {
-                return animate(null);
+                return animateFunction(null);
             },
 
             /*
@@ -276,7 +323,16 @@
 
              update: function (elements, selector)
              {
-                return highlight(elements, selector);
+                return updateFunction(elements, selector);
+            },
+
+            /*
+             *   Check if target window was scrolled below a given element
+             */
+
+             below: function (element)
+             {
+                return belowFunction(element);
             }
 
         };

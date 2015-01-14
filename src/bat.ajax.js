@@ -26,6 +26,13 @@
  *          request.setRequestHeader('key', 'value');
  *        }
  *      }, function (response) { console.log(response); });
+ *
+ *      Bat.ajax.getHTML(
+ *      {
+ *        url:  'http://www.some-website.com/page',
+ *        data: { 'number': 123 }
+ *      }, function (response) { console.log(response); });
+ *
 */
 
 (function()
@@ -108,7 +115,7 @@
         return {
 
             /*
-             *   Function to get a JSON response from ajax call
+             *   Function to get a JSON response
              *
              *   @attribute options
              *   @type object
@@ -124,13 +131,29 @@
             },
 
             /*
-             *   Function to get a JSONP response from ajax call
+             *   Function to get a JSONP response
              */
 
              getJSONP: function (options, callback)
              {
                 extendOptions (options, callback);
                 insertScript (options, callback);
+                sendData (options, callback);
+            },
+
+            /*
+             *   Function to get a HTML response
+             *
+             *   @attribute options
+             *   @type object
+             *
+             *   @attribute callback
+             *   @type function
+             */
+
+             getHTML: function (options, callback)
+             {
+                extendOptions (options, callback);
                 sendData (options, callback);
             }
 
