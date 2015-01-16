@@ -17,6 +17,7 @@
  *      Bat.url.domain();
  *      Bat.url.tld();
  *      Bat.url.param('heroId');
+ *      Bat.url.slugfy('New URL Link');
  *
  *   @test: Use http://www.jsontest.com for testing purposes.
  */
@@ -151,6 +152,38 @@
                 }
 
                 return null;
+            },
+
+            /*
+             *   Return the slug formated string for URL build
+             *
+             *   @attribute string
+             *   @type string
+             */
+
+             slugfy: function (string, whitespace) {
+
+                var slug = string.toLowerCase();
+
+                whitespace = whitespace ? whitespace : false;
+
+                slug = slug.replace(new RegExp(/\s/g),'-');
+                slug = slug.replace(new RegExp(/[àáâãäå]/g),'a');
+                slug = slug.replace(new RegExp(/æ/g),'ae');
+                slug = slug.replace(new RegExp(/ç/g),'c');
+                slug = slug.replace(new RegExp(/[èéêë]/g),'e');
+                slug = slug.replace(new RegExp(/[ìíîï]/g),'i');
+                slug = slug.replace(new RegExp(/ñ/g),'n');
+                slug = slug.replace(new RegExp(/[òóôõö]/g),'o');
+                slug = slug.replace(new RegExp(/œ/g),'oe');
+                slug = slug.replace(new RegExp(/[ùúûü]/g),'u');
+                slug = slug.replace(new RegExp(/[ýÿ]/g),'y');
+
+                if (whitespace) {
+                    slug = slug.replace(new RegExp(/\W/g),'');
+                }
+
+                return slug;
             }
 
         };
