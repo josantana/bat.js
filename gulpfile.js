@@ -35,7 +35,7 @@ gulp.task('scripts', function()
   .pipe(concat('bat.js'))
   .pipe(uglify())
   .pipe(header(jsInfo, { pkg: pkg }))
-  .pipe(gulp.dest('src'))
+  .pipe(gulp.dest('dist'))
   .pipe(notify('Main bat.js file was created.'));
 });
 
