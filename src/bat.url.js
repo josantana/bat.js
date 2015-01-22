@@ -184,6 +184,52 @@
                 }
 
                 return slug;
+            },
+
+            /*
+             *   Return an encoded string
+             *
+             *   @attribute string
+             *   @type string
+             */
+
+             encode: function (string, specialChars) {
+
+                var result;
+
+                // If true, this function encodes these special characters: , / ? : @ & = + $ #
+                specialChars = specialChars ? specialChars : true;
+
+                if (specialChars) {
+                    result = encodeURIComponent(string);
+                } else {
+                    result = encodeURI(string);
+                }
+
+                return result;
+            },
+
+            /*
+             *   Return an decoded string
+             *
+             *   @attribute string
+             *   @type string
+             */
+
+             decode: function (string, specialChars) {
+
+                var result;
+
+                // If true, this function decodes these special characters: , / ? : @ & = + $ #
+                specialChars = specialChars ? specialChars : true;
+
+                if (specialChars) {
+                    result = decodeURIComponent(string);
+                } else {
+                    result = decodeURI(string);
+                }
+
+                return result;
             }
 
         };
