@@ -103,7 +103,7 @@
 
             xhttp.onreadystatechange = function ()
             {
-                if (xhttp.status === 200 && xhttp.readyState === 4)
+                if ((xhttp.status === 200 || xhttp.status === 206) && xhttp.readyState === 4)
                 {
                     callback(xhttp.responseText);
                 }
