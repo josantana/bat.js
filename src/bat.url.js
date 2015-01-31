@@ -137,9 +137,11 @@
              *   @type string
              */
 
-             param: function (name)
+             param: function (name, newUrl)
              {
-                var i, params = data.search.substring(1).split('&');
+                var i,
+                    location = newUrl ? newUrl.substring(newUrl.indexOf('?')) : data.search,
+                    params = location.substring(1).split('&');
 
                 for (i = 0; i < params.length; i++)
                 {
