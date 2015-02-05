@@ -137,11 +137,16 @@
              *   @type string
              */
 
-             param: function (name, newUrl)
+             param: function (name, newUrl, getlast)
              {
                 var i,
                     location = newUrl ? newUrl.substring(newUrl.indexOf('?')) : data.search,
-                    params = location.substring(1).split('&');
+                    params = location.substring(1).split('&'),
+                    getlast = getlast ? getlast : false;
+
+                if (getlast) {
+                    params.reverse();
+                }
 
                 for (i = 0; i < params.length; i++)
                 {
