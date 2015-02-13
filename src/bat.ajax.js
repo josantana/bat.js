@@ -33,6 +33,12 @@
  *        data: { 'number': 123 }
  *      }, function (response) { console.log(response); });
  *
+ *      Bat.ajax.post(
+ *      {
+ *        url:  'http://www.some-rest-api.com/data',
+ *        data: { 'number': 123 }
+ *      }, function (response) { console.log(response); });
+ *
 */
 
 (function()
@@ -70,7 +76,7 @@
             return data;
         },
 
-        extendOptions = function (options, callback)
+        extendOptions = function (options, method, callback)
         {
             options.url = options.url || location.href;
             options.data = options.data ? serializeData(options.data) : null;
@@ -92,20 +98,31 @@
             document.body.appendChild(script);
         },
 
-        sendData = function (options, callback)
+        sendData = function (method, options, callback)
         {
             var xhttp = xhr(),
                 uri = options.data ? (options.url + '?' + options.data) : options.url;
 
-            xhttp.open('GET', uri, true);
+            xhttp.open(method, uri, true);
 
             options.beforeSend(xhttp);
 
+            if (method === 'POST') {
+                xhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+            }
+
             xhttp.onreadystatechange = function ()
             {
-                if ((xhttp.status === 200 || xhttp.status === 206) && xhttp.readyState === 4)
+                if (xhttp.readyState === 4)
                 {
-                    callback(xhttp.responseText);
+                    if (xhttp.status.toString().indexOf(20) === 0) {
+                        callback(xhttp.responseText);
+                    } else {
+                        callback('{' +
+                            '"status": "ERROR",' +
+                            '"code": "' + xhttp.status.toString() + '",'+
+                            '"message": "' + xhttp.statusText.toString() + '" }');
+                    }
                 }
             };
 
@@ -127,7 +144,7 @@
              getJSON: function (options, callback)
              {
                 extendOptions (options, callback);
-                sendData (options, callback);
+                sendData ('GET', options, callback);
             },
 
             /*
@@ -138,7 +155,7 @@
              {
                 extendOptions (options, callback);
                 insertScript (options, callback);
-                sendData (options, callback);
+                sendData ('GET', options, callback);
             },
 
             /*
@@ -154,8 +171,24 @@
              getHTML: function (options, callback)
              {
                 extendOptions (options, callback);
-                sendData (options, callback);
-            }
+                sendData ('GET', options, callback);
+            },
+
+            /*
+             *   Function to post
+             *
+             *   @attribute options
+             *   @type object
+             *
+             *   @attribute callback
+             *   @type function
+             */
+
+             post: function (options, callback)
+             {
+                extendOptions (options, callback);
+                sendData ('POST', options, callback);
+            },
 
         };
     })();
