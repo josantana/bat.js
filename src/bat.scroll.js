@@ -268,7 +268,8 @@
                 // Update element
                 if (getPageScrollBottom() >= elPosBottom) {
                     // Dispatch event with the ID of this scroll Position
-                    var event = new CustomEvent('scrollPassing', { 'detail': { 'element': element }});
+                    var event = document.createEvent('CustomEvent');
+                    event.initCustomEvent('scrollPassing', true, true, { 'detail': { 'element': element }});
                     window.dispatchEvent(event);
                     // Remove this event handler
                     target.removeEventListener('scroll', alertScrollPassing);
