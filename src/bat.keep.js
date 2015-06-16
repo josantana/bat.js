@@ -54,6 +54,9 @@
              */
 
             timestamper: function (days) {
+
+                if (days === -1) { return -1; }
+
                 days = (typeof days !== 'undefined') ? days : 0;
 
                 var date = new Date(),
