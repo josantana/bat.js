@@ -53,16 +53,19 @@
              *   @type object
              */
 
-            timestamper: function (days) {
-
-                if (days === -1) { return -1; }
+            timestamper: function (days, format) {
 
                 days = (typeof days !== 'undefined') ? days : 0;
+                format = (typeof format !== 'undefined') ? format : false;
 
                 var date = new Date(),
                     milliseconds = (24 * 60 * 60 * 1000);
 
-                return date.setTime(date.getTime() + (days * milliseconds));
+                date.setTime(date.getTime() + (days * milliseconds))
+
+                if (format) { date.toUTCString(); }
+
+                return date;
             },
 
             /*
@@ -162,7 +165,7 @@
                     var expires;
 
                     if (days) {
-                        expires = '; expires=' + Bat.keep.timestamper(days).toUTCString();
+                        expires = '; expires=' + Bat.keep.timestamper(days, true);
                     } else {
                         expires = '';
                     }
