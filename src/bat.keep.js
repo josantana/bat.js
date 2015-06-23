@@ -61,7 +61,7 @@
                 var date = new Date(),
                     milliseconds = (24 * 60 * 60 * 1000);
 
-                date.setTime(date.getTime() + (days * milliseconds))
+                date.setTime(date.getTime() + (days * milliseconds));
 
                 if (format) { date.toUTCString(); }
 
@@ -117,11 +117,12 @@
 
                 if (data) {
 
+                    // console.log(this.remaining);
                     var logMessage = 'BAT keep: "' + name + '" will expire in ';
                     logMessage += (this.remaining.days > 0) ? [this.remaining.days, ' day'].join('') : '';
                     logMessage += (this.remaining.days > 1) ? 's' : '';
                     logMessage += (this.remaining.days > 0 && this.remaining.hours > 0) ? ' and ' : '';
-                    logMessage += (this.remaining.hours > 0) ? [this.remaining.hours, ' hours'].join('') : 'few minutes';
+                    logMessage += (this.remaining.days === 0 && this.remaining.hours > 0) ? [this.remaining.hours, ' hours'].join('') : 'few minutes';
                     logMessage += ' from ' + this.storageType();
                     console.log(logMessage);
 
@@ -170,7 +171,7 @@
                         expires = '';
                     }
 
-                    document.cookie = name + '-expires=' + Bat.keep.timestamper(days) + expires + '; path=/';
+                    document.cookie = name + '-expires=' + Bat.keep.timestamper(days, true) + '; path=/';
                     document.cookie = name + '=' + value + expires + '; path=/';
                 },
 
@@ -265,11 +266,23 @@
 
                         data = JSON.parse(data);
 
-                        if (Bat.keep.timestamper() < data.timestamp) {
+                        var now = new Date(Bat.keep.timestamper()),
+                            exp = new Date(data.timestamp);
 
-                            var difference = new Date(data.timestamp - Bat.keep.timestamper());
+                        if (now < exp) {
+
+                            var difference = new Date(Math.abs(now.getTime() - exp.getTime()));
                             Bat.keep.remaining.days = difference.getUTCDate() - 1;
                             Bat.keep.remaining.hours = difference.getUTCHours();
+
+                        // console.log('-------');
+                        // console.log('localStorage get');
+                        // console.log(data);
+                        // console.log(now);
+                        // console.log(exp);
+                        // console.log(difference);
+                        // console.log(Bat.keep.remaining);
+                        // console.log('-------');
 
                             return data.value;
 
