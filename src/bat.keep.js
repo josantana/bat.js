@@ -97,9 +97,9 @@
             {
                 if (value) {
                     this[this.storageType()].set(name, value, days);
-                    console.log('BAT keep: ' + name + ' [CREATED with '+ this.storageType() +']');
+                    Bat.log.info('BAT keep: ' + name + ' [CREATED with '+ this.storageType() +']');
                 } else {
-                    console.log('BAT keep: Can\'t store empty data');
+                    Bat.log.info('BAT keep: Can\'t store empty data');
                     return false;
                 }
             },
@@ -117,14 +117,17 @@
 
                 if (data) {
 
-                    // console.log(this.remaining);
-                    var logMessage = 'BAT keep: "' + name + '" will expire in ';
-                    logMessage += (this.remaining.days > 0) ? [this.remaining.days, ' day'].join('') : '';
-                    logMessage += (this.remaining.days > 1) ? 's' : '';
-                    logMessage += (this.remaining.days > 0 && this.remaining.hours > 0) ? ' and ' : '';
-                    logMessage += (this.remaining.days === 0 && this.remaining.hours > 0) ? [this.remaining.hours, ' hours'].join('') : 'few minutes';
-                    logMessage += ' from ' + this.storageType();
-                    console.log(logMessage);
+                    var expirationInfo = [
+                        ('BAT keep: "' + name + '" will expire in '),
+                        ((this.remaining.days > 0) ? [this.remaining.days, ' day'].join('') : ''),
+                        ((this.remaining.days > 1) ? 's' : ''),
+                        ((this.remaining.days > 0 && this.remaining.hours > 0) ? ' and ' : ''),
+                        ((this.remaining.hours > 0) ? [this.remaining.hours, ' hour'].join('') : 'few minutes'),
+                        ((this.remaining.hours > 1) ? 's' : ''),
+                        ' from ' + this.storageType()
+                    ].join('');
+
+                    Bat.log.info(expirationInfo);
 
                     return data;
 
@@ -143,7 +146,7 @@
             delete: function (name)
             {
                 this[this.storageType()].delete(name);
-                console.log('BAT keep: ' + name + ' [DELETED from '+ this.storageType() +']');
+                Bat.log.info('BAT keep: ' + name + ' [DELETED from '+ this.storageType() +']');
             },
 
             cookie: {
@@ -275,14 +278,14 @@
                             Bat.keep.remaining.days = difference.getUTCDate() - 1;
                             Bat.keep.remaining.hours = difference.getUTCHours();
 
-                        // console.log('-------');
-                        // console.log('localStorage get');
-                        // console.log(data);
-                        // console.log(now);
-                        // console.log(exp);
-                        // console.log(difference);
-                        // console.log(Bat.keep.remaining);
-                        // console.log('-------');
+                            // Bat.log.trace('-------');
+                            // Bat.log.trace('localStorage get');
+                            // Bat.log.trace(data);
+                            // Bat.log.trace(now);
+                            // Bat.log.trace(exp);
+                            // Bat.log.trace(difference);
+                            // Bat.log.trace(Bat.keep.remaining);
+                            // Bat.log.trace('-------');
 
                             return data.value;
 

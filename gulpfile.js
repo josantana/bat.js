@@ -6,9 +6,9 @@ var notify  = require("gulp-notify");
 
 var js =
 [
+  'src/bat.log.js',
   'src/bat.keep.js',
   'src/bat.cookie.js',
-  'src/bat.log.js',
   'src/bat.ajax.js',
   'src/bat.md5.js',
   'src/bat.timer.js',

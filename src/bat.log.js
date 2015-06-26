@@ -77,12 +77,9 @@
 
         var enabled = function ()
         {
-            if (Bat.cookie.get('Bat.log') === 'enabled')
-            {
+            if (Bat.keep.get('Bat.log') === 'enabled') {
                 return true;
-            }
-                else
-            {
+            } else {
                 return false;
             }
         };
@@ -93,18 +90,16 @@
              *   Enable logging
              */
 
-             enable: function ()
-             {
-                Bat.cookie.set('Bat.log', 'enabled', 1);
+            enable: function () {
+                Bat.keep.set('Bat.log', 'enabled', 1);
             },
 
             /*
              *   Disable logging
              */
 
-             disable: function ()
-             {
-                Bat.cookie.delete('Bat.log');
+            disable: function () {
+                Bat.keep.delete('Bat.log');
             },
 
             /*
@@ -114,12 +109,8 @@
              *   @type string
              */
 
-             info: function (message)
-             {
-                if (enabled)
-                {
-                    console.info(message);
-                }
+            info: function (message) {
+                if (enabled) { console.info(message); }
             },
 
             /*
@@ -129,12 +120,8 @@
              *   @type string
              */
 
-             trace: function (message)
-             {
-                if (enabled)
-                {
-                    console.trace(message);
-                }
+            trace: function (message) {
+                if (enabled) { console.trace(message); }
             },
 
             /*
@@ -144,12 +131,8 @@
              *   @type string
              */
 
-             warn: function (message)
-             {
-                if (enabled)
-                {
-                    console.warn(message);
-                }
+            warn: function (message) {
+                if (enabled) { console.warn(message); }
             },
 
             /*
@@ -159,12 +142,8 @@
              *   @type string
              */
 
-             error: function (message)
-             {
-                if (enabled)
-                {
-                    console.error(message);
-                }
+            error: function (message) {
+                if (enabled) { console.error(message); }
             },
 
             /*
@@ -174,24 +153,16 @@
              *   @type string
              */
 
-             group: function (name)
-             {
-                if (enabled && name)
-                {
-                    console.group(name);
-                }
+            group: function (name) {
+                if (enabled && name) { console.group(name); }
             },
 
             /*
              *   End a log group
              */
 
-             ungroup: function ()
-             {
-                if (enabled)
-                {
-                    console.groupEnd();
-                }
+            ungroup: function () {
+                if (enabled) { console.groupEnd(); }
             }
 
         };
