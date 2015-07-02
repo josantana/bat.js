@@ -17,6 +17,8 @@
  *      Bat.scroll.top();
  *      Bat.scroll.update('allAnchorElements');
  *      Bat.scroll.below(element);
+ *      Bat.scroll.belowEnabled = true; // Activate below again, after used
+ *      Bat.scroll.below('stop'); // Remove scroll listener
  *
  */
 
@@ -39,6 +41,8 @@
         var interval = 30,
             timeout = null, //timeout local variable
             target = window,
+            firstTime = true,
+            belowElement = null,
 
         stop = function ()
         {
@@ -255,37 +259,40 @@
             }
         },
 
-        belowFunction = function (element) {
+        monitorScrollBelow = function () {
 
-            var elPosBottom = 0;
+            // console.log('monitorScrollBelow');
 
-            // Get element top position
-            // Added realTop subtraction to fix target window position
-            var targetDiff = (target !== window) ? getRealTop(target) : 0;
-            elPosBottom = (getRealTop(element) + element.clientHeight) - targetDiff;
+            // If window page scroll if below the
 
-            function alertScrollPassing () {
-                // Update element
-                if (getPageScrollBottom() >= elPosBottom) {
-                    // Dispatch event with the ID of this scroll Position
-                    var event = document.createEvent('CustomEvent');
-                    event.initCustomEvent('scrollPassing', true, true, { 'detail': { 'element': element }});
-                    window.dispatchEvent(event);
-                    // Remove this event handler
-                    target.removeEventListener('scroll', alertScrollPassing);
-                }
+            if (Bat.scroll.belowEnabled && getPageScrollBottom() >= (belowElement.clientHeight + (getRealTop(belowElement) - getRealTop(target)))) {
+                // Dispatch event with the ID of this scroll Position
+                var event = document.createEvent('CustomEvent');
+                event.initCustomEvent('scrollPassing', true, true, { 'detail': { 'element': belowElement }});
+                window.dispatchEvent(event);
+                Bat.scroll.belowEnabled = false;
             }
+        },
 
-            // Add a scroll function
+        belowFunction = function () {
 
-            target.addEventListener('scroll', alertScrollPassing);
+            if (belowElement !== 'stop') {
 
-            // Update at Start
+                // console.log('monitorScrollBelow: ON');
 
-            if (document.body.hasAttributes('unresolved')) {
-                document.addEventListener('polymer-ready', alertScrollPassing);
+                // Update at Start
+                window.addEventListener('load', monitorScrollBelow, false);
+
+                // Add a scroll function
+                target.addEventListener('scroll', monitorScrollBelow, false);
+
             } else {
-                window.addEventListener('load', alertScrollPassing);
+
+                // console.log('monitorScrollBelow: OFF');
+
+                // Remove Listener
+                target.removeEventListener('scroll', monitorScrollBelow, false);
+
             }
         };
 
@@ -331,9 +338,12 @@
              *   Check if target window was scrolled below a given element
              */
 
+             belowEnabled: true,
+
              below: function (element)
              {
-                return belowFunction(element);
+                belowElement = element;
+                return belowFunction();
             }
 
         };
