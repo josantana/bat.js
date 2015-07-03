@@ -97,7 +97,6 @@
             {
                 if (value) {
                     this[this.storageType()].set(name, value, days);
-                    Bat.log.info('BAT keep: ' + name + ' [CREATED with '+ this.storageType() +']');
                 } else {
                     Bat.log.info('BAT keep: Can\'t store empty data');
                     return false;
@@ -146,7 +145,6 @@
             delete: function (name)
             {
                 this[this.storageType()].delete(name);
-                Bat.log.info('BAT keep: ' + name + ' [DELETED from '+ this.storageType() +']');
             },
 
             cookie: {
@@ -176,6 +174,8 @@
 
                     document.cookie = name + '-expires=' + Bat.keep.timestamper(days, true) + '; path=/';
                     document.cookie = name + '=' + value + expires + '; path=/';
+
+                    Bat.log.info('BAT keep: ' + name + ' [CREATED with cookies]');
                 },
 
                 /*
@@ -228,6 +228,8 @@
                 {
                     this.set(name + '-expires', '', -1);
                     this.set(name, '', -1);
+
+                    Bat.log.info('BAT keep: ' + name + ' [DELETED from cookies]');
                 }
             },
 
@@ -252,6 +254,8 @@
                         'value': value,
                         'timestamp': Bat.keep.timestamper(days)
                     }));
+
+                    Bat.log.info('BAT keep: ' + name + ' [CREATED with localStorage]');
                 },
 
                 /*
@@ -309,6 +313,8 @@
                 delete: function (name)
                 {
                     window.localStorage.removeItem(name);
+
+                    Bat.log.info('BAT keep: ' + name + ' [DELETED from localStorage]');
                 }
             }
         };
