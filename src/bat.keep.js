@@ -44,6 +44,7 @@
             storageType: function ()
             {
                 return ('localStorage' in window && window.localStorage !== null) ? 'localStorage' : 'cookie';
+
             },
 
             /*
@@ -76,6 +77,7 @@
              */
 
             remaining: {
+                years : 0,
                 days: 0,
                 hours: 0
             },
@@ -115,9 +117,11 @@
                 var data = this[this.storageType()].get(name);
 
                 if (data) {
-
+    
                     var expirationInfo = [
                         ('BAT keep: "' + name + '" will expire in '),
+                        ((this.remaining.years > 0) ? [this.remaining.years, ' year'].join('') : ''),
+                        ((this.remaining.years > 1) ? 's ' : ' '),
                         ((this.remaining.days > 0) ? [this.remaining.days, ' day'].join('') : ''),
                         ((this.remaining.days > 1) ? 's' : ''),
                         ((this.remaining.days > 0 && this.remaining.hours > 0) ? ' and ' : ''),
@@ -206,6 +210,7 @@
                             var difference = new Date(cookie.substring(nameXP.length, cookie.length) - Bat.keep.timestamper());
                             Bat.keep.remaining.days = difference.getUTCDate() - 1;
                             Bat.keep.remaining.hours = difference.getUTCHours();
+                            Bat.keep.remaining.years = difference.getUTCFullYear();
                         }
 
                         if (cookie.indexOf(nameEQ) === 0)
@@ -279,8 +284,10 @@
                         if (now < exp) {
 
                             var difference = new Date(Math.abs(now.getTime() - exp.getTime()));
+                            
                             Bat.keep.remaining.days = difference.getUTCDate() - 1;
                             Bat.keep.remaining.hours = difference.getUTCHours();
+                            Bat.keep.remaining.years = new Date(exp).getFullYear() - new Date(now).getFullYear();
 
                             // Bat.log.trace('-------');
                             // Bat.log.trace('localStorage get');
