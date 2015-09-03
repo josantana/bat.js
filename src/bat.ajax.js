@@ -89,7 +89,7 @@
         {
             var jsonpCallback = options.callback || ('JSONP_' + new Date().getTime());
 
-            options.url += ((options.url.indexOf('?') === -1) ? '?' : '&') + 'callback=' + jsonpCallback;
+            options.url += (options.url.match(/\?/g) ? '&' : '?') + 'callback=' + jsonpCallback;
 
             window[jsonpCallback] = callback; // Now our callback method is globally visible
 
@@ -101,7 +101,8 @@
         sendData = function (method, options, callback)
         {
             var xhttp = xhr(),
-                uri = options.data ? (options.url + '?' + options.data) : options.url;
+                glue = options.url.match(/\?/g) ? '&' : '?',
+                uri = options.data ? (options.url + glue + options.data) : options.url;
 
             xhttp.open(method, uri, true);
 
