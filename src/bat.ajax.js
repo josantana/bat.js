@@ -78,20 +78,22 @@
 
         extendOptions = function (options, method, callback)
         {
-            options.url = options.url || location.href;
             options.data = options.data ? serializeData(options.data) : null;
             options.beforeSend = options.beforeSend || function() {};
-
             callback = callback || function() {};
+
+            // URL builder
+
+            options.url = options.url || location.href;
+            var glue = options.url.match(/\?/g) ? '&' : '?';
+            options.url = options.data ? (options.url + glue + options.data) : options.url;
         },
 
         insertScript = function (options, callback)
         {
             var jsonpCallback = options.callback || ('JSONP_' + new Date().getTime());
-
             options.url += (options.url.match(/\?/g) ? '&' : '?') + 'callback=' + jsonpCallback;
-
-            window[jsonpCallback] = callback; // Now our callback method is globally visible
+            window[jsonpCallback] = callback;
 
             var script = document.createElement('script');
             script.src = options.url;
@@ -100,12 +102,9 @@
 
         sendData = function (method, options, callback)
         {
-            var xhttp = xhr(),
-                glue = options.url.match(/\?/g) ? '&' : '?',
-                uri = options.data ? (options.url + glue + options.data) : options.url;
+            var xhttp = xhr();
 
-            xhttp.open(method, uri, true);
-
+            xhttp.open(method, options.url, true);
             options.beforeSend(xhttp);
 
             if (method === 'POST') {
@@ -119,10 +118,13 @@
                     if (xhttp.status.toString().indexOf(20) === 0) {
                         callback(xhttp.responseText);
                     } else {
-                        callback('{' +
-                            '"status": "ERROR",' +
+                        callback(
+                            '{' +
+                            '"status": "ERROR",'+
                             '"code": "' + xhttp.status.toString() + '",'+
-                            '"message": "' + xhttp.statusText.toString() + '" }');
+                            '"message": "' + xhttp.statusText.toString() + '"'+
+                            '}'
+                        );
                     }
                 }
             };
@@ -156,17 +158,10 @@
              {
                 extendOptions (options, callback);
                 insertScript (options, callback);
-                sendData ('GET', options, callback);
             },
 
             /*
              *   Function to get a HTML response
-             *
-             *   @attribute options
-             *   @type object
-             *
-             *   @attribute callback
-             *   @type function
              */
 
              getHTML: function (options, callback)
@@ -177,12 +172,6 @@
 
             /*
              *   Function to post
-             *
-             *   @attribute options
-             *   @type object
-             *
-             *   @attribute callback
-             *   @type function
              */
 
              post: function (options, callback)
