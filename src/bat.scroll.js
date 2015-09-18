@@ -50,10 +50,20 @@
             interval = 30; // reset milisec iterator to original value
         },
 
-        getRealTop = function (element) // helper function
+        // helper function
+
+        getRealTop = function (element)
         {
             var el = element,
                 top = 0;
+
+            // Can't run below loop function on window. In fact, we don't need to.
+
+            if (target === window) {
+                return top;
+            }
+
+            //
 
             do
             {
@@ -64,7 +74,9 @@
             return top;
         },
 
-        getPageScrollTop = function()  // helper function
+        // helper function
+
+        getPageScrollTop = function()
         {
             var top;
 
@@ -77,7 +89,9 @@
             return top;
         },
 
-        getPageScrollBottom = function()  // helper function
+        // helper function
+
+        getPageScrollBottom = function()
         {
             var top;
 
@@ -90,7 +104,9 @@
             return top;
         },
 
-        getPageHeight = function()  // helper function
+        // helper function
+
+        getPageHeight = function()
         {
             var body = document.body,
                 html = document.documentElement,
@@ -105,7 +121,9 @@
             return height;
         },
 
-        animateFunction = function (ID) // Main function
+        // Main function
+
+        animateFunction = function (ID)
         {
             stop(); // for click on another button or link
 
@@ -260,8 +278,6 @@
         },
 
         monitorScrollBelow = function () {
-
-            // console.log('monitorScrollBelow');
 
             // If window page scroll if below the
 
