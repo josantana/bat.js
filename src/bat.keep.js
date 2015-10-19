@@ -255,10 +255,15 @@
 
                 set: function (name, value, days)
                 {
-                    window.localStorage.setItem(name, JSON.stringify({
-                        'value': value,
-                        'timestamp': Bat.keep.timestamper(days)
-                    }));
+                    try {
+                        window.localStorage.setItem(name, JSON.stringify({
+                            'value': value,
+                            'timestamp': Bat.keep.timestamper(days)
+                        }));
+                    }
+                    catch(exception) {
+                        
+                    }
 
                     Bat.log.info('BAT keep: ' + name + ' [CREATED with localStorage]');
                 },
