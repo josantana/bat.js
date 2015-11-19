@@ -79,6 +79,7 @@
         extendOptions = function (options, method, callback)
         {
             options.data = options.data ? serializeData(options.data) : null;
+            options.headers = options.headers || null;
             options.beforeSend = options.beforeSend || function() {};
             callback = callback || function() {};
 
@@ -109,6 +110,15 @@
 
             if (method === 'POST') {
                 xhttp.setRequestHeader('content-type', 'application/x-www-form-urlencoded');
+            }
+
+            // If we got headers, set them
+
+            if (options.headers) {
+
+                for (var key in options.headers) {
+                    request.setRequestHeader(key, options.headers[key]);
+                }
             }
 
             xhttp.onreadystatechange = function ()
