@@ -44,7 +44,6 @@
             storageType: function ()
             {
                 return ('localStorage' in window && window.localStorage !== null) ? 'localStorage' : 'cookie';
-
             },
 
             /*
@@ -114,10 +113,10 @@
 
             get: function (name)
             {
-                var data = this[this.storageType()].get(name);
+                var data = this[this.storageType()].get(name) || this['cookie'].get(name);
 
                 if (data) {
-    
+
                     var expirationInfo = [
                         ('BAT keep: "' + name + '" will expire in '),
                         ((this.remaining.years > 0) ? [this.remaining.years, ' year'].join('') : ''),
@@ -262,7 +261,7 @@
                         }));
                     }
                     catch(exception) {
-                        
+
                     }
 
                     Bat.log.info('BAT keep: ' + name + ' [CREATED with localStorage]');
@@ -289,7 +288,7 @@
                         if (now < exp) {
 
                             var difference = new Date(Math.abs(now.getTime() - exp.getTime()));
-                            
+
                             Bat.keep.remaining.days = difference.getUTCDate() - 1;
                             Bat.keep.remaining.hours = difference.getUTCHours();
                             Bat.keep.remaining.years = new Date(exp).getFullYear() - new Date(now).getFullYear();
