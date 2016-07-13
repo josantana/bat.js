@@ -167,18 +167,20 @@
 
                 set: function (name, value, days)
                 {
-                    var expires;
+                    var value = '=' + value + ';',
+                        expiresValue = Bat.keep.timestamper(days, true),
+                        expires = days ? ('expires=' + expiresValue + ';') : '',
+                        path = 'path=/;',
+                        domain = 'domain=.' + Bat.url.subdomain() + '.' + Bat.url.domain() + '.' + Bat.url.tld() + ';';
 
-                    if (days) {
-                        expires = '; expires=' + Bat.keep.timestamper(days, true);
-                    } else {
-                        expires = '';
-                    }
+                    expiresValue = '=' + expiresValue + ';',
 
-                    document.cookie = name + '-expires=' + Bat.keep.timestamper(days, true) + '; path=/';
-                    document.cookie = name + '=' + value + expires + '; path=/';
+                    document.cookie = name + value + expires + path + domain;
+                    document.cookie = name + '-expires' + expiresValue + expires + path + domain;
 
-                    Bat.log.info('BAT keep: ' + name + ' [CREATED with cookies]');
+                    console.log('keep-cookie-set', name, domain);
+
+                    if (days !== -1) { Bat.log.info('BAT keep: ' + name + ' [CREATED with cookies]'); }
                 },
 
                 /*
@@ -230,9 +232,7 @@
 
                 delete: function (name)
                 {
-                    this.set(name + '-expires', '', -1);
                     this.set(name, '', -1);
-
                     Bat.log.info('BAT keep: ' + name + ' [DELETED from cookies]');
                 }
             },

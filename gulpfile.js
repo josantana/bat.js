@@ -7,13 +7,13 @@ var notify  = require("gulp-notify");
 var js =
 [
   'src/bat.log.js',
+  'src/bat.url.js',
   'src/bat.keep.js',
   'src/bat.cookie.js',
   'src/bat.ajax.js',
   'src/bat.md5.js',
   'src/bat.timer.js',
-  'src/bat.scroll.js',
-  'src/bat.url.js'
+  'src/bat.scroll.js'
 ];
 
 var pkg = require('./package.json');
