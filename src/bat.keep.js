@@ -63,7 +63,7 @@
 
                 date.setTime(date.getTime() + (days * milliseconds));
 
-                if (format) { date.toUTCString(); }
+                if (format) { date = date.toUTCString(); }
 
                 return date;
             },
