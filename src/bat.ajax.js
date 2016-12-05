@@ -117,7 +117,7 @@
             if (options.headers) {
 
                 for (var key in options.headers) {
-                    request.setRequestHeader(key, options.headers[key]);
+                    xhttp.setRequestHeader(key, options.headers[key]);
                 }
             }
 
