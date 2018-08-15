@@ -165,13 +165,13 @@
                  *   @type int
                  */
 
-                set: function (name, value, days)
+                set: function (name, value, days, customDomain)
                 {
                     var value = '=' + value + ';',
                         expiresValue = Bat.keep.timestamper(days, true),
                         expires = days ? ('expires=' + expiresValue + ';') : '',
                         path = 'path=/;',
-                        domain = 'domain=.' + Bat.url.subdomain() + '.' + Bat.url.domain() + '.' + Bat.url.tld() + ';';
+                        domain = 'domain=' + customDomain || ('.' + Bat.url.subdomain() + '.' + Bat.url.domain() + '.' + Bat.url.tld()) + ';';
 
                     expiresValue = '=' + expiresValue + ';',
 
