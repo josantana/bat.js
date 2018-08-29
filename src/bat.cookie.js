@@ -47,9 +47,10 @@
              *   @type int
              */
 
-             set: function (name, value, days)
+             set: function (name, value, days, customDomain)
              {
                 var expires;
+                var domain;
 
                 if (days)
                 {
@@ -62,7 +63,8 @@
                     expires = '';
                 }
 
-                document.cookie  = name + '=' + value + expires + '; path=/';
+                 if (customDomain) domain = ' domain=' + customDomain + ';';
+                 document.cookie = name + '=' + value + expires + '; path=/;' + domain;
 
                 if (days !== -1) { Bat.log.info('Cookie: ' + name + ' [CREATED]'); }
             },
